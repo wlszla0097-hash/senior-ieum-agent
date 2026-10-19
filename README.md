@@ -245,10 +245,19 @@ http://localhost:5500 을 연다 → 오른쪽 "샘플 넣기" → 요약·그�
 
 `docs/screenshots/` 폴더에 넣고 아래에 링크한다.
 
-- [ ] 채팅 화면: 질문 + 답변 + "도구 호출:" 표시 + 오른쪽 데이터 요약
-- [ ] 데이터 관리 화면: 추가, 수정(Enter), 삭제 동작
-- [ ] 대화 기록 화면: 목록에서 불러오기
-- [ ] "프롬프트 보기" 대화상자 (컨텍스트 주입 증거)
+- [x] 채팅 화면: 질문 + 데이터 요약을 반영한 답변 (배포 화면)
+
+  ![채팅 — 데이터 요약을 반영한 답변](docs/screenshots/01-chat.png)
+
+- [x] 데이터 관리 화면: 수정(인원 값 변경 후 Enter → "수정됨")
+
+  ![데이터 관리 — 수정](docs/screenshots/02-data-edit.png)
+
+- [x] 대화 기록 화면: 목록에서 이전 대화 불러오기
+
+  ![대화 기록 — 불러오기](docs/screenshots/03-conversation-load.png)
+
+- [ ] "프롬프트 보기" 대화상자 (컨텍스트 주입 증거) — 선택
 - [x] Swagger `/docs` (Render 주소)
 
   ![Swagger — Render 배포](docs/screenshots/04-swagger-render.png)
