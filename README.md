@@ -243,7 +243,7 @@ http://localhost:5500 을 연다 → 오른쪽 "샘플 넣기" → 요약·그�
 
 ## 10. 제출 스크린샷
 
-`docs/screenshots/` 폴더에 넣고 아래에 링크한다.
+모두 배포된 화면(Vercel → Render → Firestore)에서 캡처했다.
 
 - [x] 채팅 화면: 질문 + 데이터 요약을 반영한 답변 (배포 화면)
 
@@ -257,12 +257,10 @@ http://localhost:5500 을 연다 → 오른쪽 "샘플 넣기" → 요약·그�
 
   ![대화 기록 — 불러오기](docs/screenshots/03-conversation-load.png)
 
-- [ ] "프롬프트 보기" 대화상자 (컨텍스트 주입 증거) — 선택
 - [x] Swagger `/docs` (Render 주소)
 
   ![Swagger — Render 배포](docs/screenshots/04-swagger-render.png)
 
-- [ ] (보너스) 그래프 + 다크 모드
 
 ## 11. 평가 때 항목별 한 문장
 
