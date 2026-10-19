@@ -1,0 +1,6 @@
+# 백엔드 패키지 목록 — 과제 지정 5개만 사용 (Render 는 이 파일로 설치).
+fastapi>=0.110
+uvicorn[standard]>=0.29
+firebase-admin>=6.5
+openai>=1.40
+python-dotenv>=1.0

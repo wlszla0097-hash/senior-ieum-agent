@@ -1,0 +1,12 @@
+# 깃에 올리지 않을 파일 — 키(.env, 서비스 계정 JSON)와 빌드·가상환경 산출물.
+.env
+.env.*
+!.env.example
+serviceAccount*.json
+*-firebase-adminsdk-*.json
+__pycache__/
+*.pyc
+.venv/
+venv/
+.vercel
+frontend/dist/

@@ -1,0 +1,6 @@
+# Vercel 백엔드(api/index.py)용 패키지 목록 — backend/requirements.txt 와 같은 내용을 유지할 것.
+fastapi>=0.110
+uvicorn[standard]>=0.29
+firebase-admin>=6.5
+openai>=1.40
+python-dotenv>=1.0

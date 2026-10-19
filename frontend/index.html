@@ -1,0 +1,151 @@
+<!-- index.html — 화면 뼈대: 과제 필수 화면 4개(채팅 / 데이터 관리 / 대화 기록 / 데이터 요약) + 보너스(그래프·CSV·다크 모드·프롬프트 보기) + 사업 탭 + HR 공통 계산. -->
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>시니어 이음 AI 비서</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div>
+      <h1>시니어 이음 AI 비서</h1>
+      <p class="sub">시니어인턴십 · 선택근무제를 처음 맡은 담당자·기관을 위한 <b>선임자 역할</b> 교육·컨설팅 비서</p>
+    </div>
+    <div class="top-right">
+      <span id="server-status" class="pill">서버 확인 중…</span>
+      <button id="theme-toggle" class="btn ghost" title="다크 모드 전환" aria-label="다크 모드 전환">🌙</button>
+    </div>
+  </header>
+
+  <div id="cold-start" class="notice hidden" role="status">
+    ⏳ 백엔드(Render 무료 티어)가 잠들어 있으면 첫 응답에 30초쯤 걸립니다. 창을 닫지 말고 잠시만 기다려 주세요.
+  </div>
+
+  <main class="layout">
+    <!-- 화면 ③ 대화 기록: 목록 · 불러오기 · 삭제 -->
+    <aside class="panel side" aria-label="대화 기록">
+      <div class="panel-head">
+        <h2>대화 기록</h2>
+        <button id="new-chat" class="btn small">+ 새 대화</button>
+      </div>
+      <ul id="conv-list" class="conv-list"><li class="muted">불러오는 중…</li></ul>
+    </aside>
+
+    <!-- 화면 ① 채팅: 사업·모드 선택, 로딩 표시, 도구 호출 표시 -->
+    <section class="panel chat" aria-label="채팅">
+      <!-- 사업 탭: GET /api/programs 로 그린다 (새 사업은 backend/programs/registry.py 에 추가하면 자동) -->
+      <nav id="program-tabs" class="tabs" aria-label="사업 선택"><span class="muted small-text">사업 목록 불러오는 중…</span></nav>
+      <input type="hidden" id="program" value="senior">
+      <div class="panel-head controls">
+        <label>모드
+          <select id="mode"><option value="qa">실무 Q&amp;A</option></select>
+        </label>
+        <button id="show-prompt" class="btn ghost small" title="GPT에 실제로 들어가는 시스템 프롬프트 보기">프롬프트 보기</button>
+      </div>
+      <p class="principle">AI는 설명만 · 날짜·금액은 규칙엔진이 계산 · 최종 결정은 담당자 · ⚠ 수치는 지침 원문 확인 필요</p>
+      <div id="messages" class="messages" aria-live="polite">
+        <div class="msg assistant">안녕하세요, 선임자 역할 비서입니다. 위에서 사업 탭과 모드를 고른 뒤 질문해 주세요.<br>예) "신규 담당자인데 첫 달에 뭘 챙겨야 하나요?" / "직원 E001 의 연장수당을 계산해 주세요."</div>
+      </div>
+      <div id="quick" class="quick"></div>
+      <form id="chat-form" class="chat-form">
+        <input id="chat-input" type="text" placeholder="질문을 입력하세요" autocomplete="off" required maxlength="2000" aria-label="질문">
+        <button id="send-btn" class="btn primary" type="submit">보내기</button>
+      </form>
+    </section>
+
+    <aside class="panel side right">
+      <!-- HR 공통 계산: 직원 선택 → 계약 시급(수정 가능) → 가산수당 계산 → 결과 카드(근거·출처·고지) -->
+      <section id="hr-panel" class="hr-panel hidden" aria-label="HR 공통 계산">
+        <div class="panel-head"><h2>근로기준법 계산</h2><span class="muted small-text">안내·계산만 · 판정 없음</span></div>
+        <label class="consent"><input type="checkbox" id="consent"> 계산은 참고용이며 최종 판단과 책임은 이용자에게 있음에 동의</label>
+        <div class="field-row">
+          <label>직원 <select id="emp-select"><option value="">직접 입력</option></select></label>
+        </div>
+        <div id="emp-card" class="emp-card hidden">
+          <div><b id="emp-name"></b> <span id="emp-site" class="muted small-text"></span></div>
+          <div>계약 시급 <b id="emp-wage"></b>원 · 주 <span id="emp-hours"></span>h · <span id="emp-source" class="tag"></span>
+            <button id="edit-wage-btn" class="btn ghost small">수정하기</button></div>
+          <div id="emp-history" class="small-text muted"></div>
+          <form id="edit-wage-form" class="edit-wage hidden">
+            <input id="ew-wage" type="number" min="1" step="any" placeholder="수정 시급(원)" required aria-label="수정 시급">
+            <input id="ew-by" type="text" placeholder="수정자" maxlength="60" required aria-label="수정자">
+            <input id="ew-reason" class="wide" type="text" placeholder="사유 (5자 이상, 예: 2026-09 임금인상 반영)" minlength="5" maxlength="300" required aria-label="사유">
+            <button class="btn primary small" type="submit">저장</button>
+            <button type="button" id="ew-cancel" class="btn ghost small">취소</button>
+          </form>
+        </div>
+        <form id="calc-form" class="calc-form">
+          <input id="c-wage" type="number" min="1" step="any" placeholder="시급(원)" aria-label="시급">
+          <input id="c-weekly" type="number" min="0" max="168" step="0.5" placeholder="주 소정근로(h)" aria-label="주 소정근로시간">
+          <input id="c-ot" type="number" min="0" step="0.5" placeholder="연장(h)" value="0" aria-label="연장시간">
+          <input id="c-night" type="number" min="0" step="0.5" placeholder="야간(h)" value="0" aria-label="야간시간">
+          <input id="c-hol" type="number" min="0" step="0.5" placeholder="휴일(h)" value="0" aria-label="휴일시간">
+          <input id="c-hol8" type="number" min="0" step="0.5" placeholder="휴일 8h 초과분" value="0" aria-label="휴일 8시간 초과분">
+          <label class="check"><input type="checkbox" id="c-under5"> 5인 미만 사업장</label>
+          <div class="calc-btns">
+            <button class="btn primary small" type="submit" data-calc="overtime" disabled>가산수당 계산</button>
+            <button class="btn small" type="button" data-calc="min-wage" disabled>최저임금 비교</button>
+            <button class="btn small" type="button" data-calc="weekly-holiday" disabled>주휴 계산</button>
+          </div>
+        </form>
+        <div id="calc-result" class="calc-result hidden"></div>
+      </section>
+
+      <!-- 화면 ④ 데이터 요약 + 보너스 그래프 -->
+      <section aria-label="데이터 요약">
+        <div class="panel-head">
+          <h2>데이터 요약</h2>
+          <button id="refresh-summary" class="btn ghost small">새로고침</button>
+        </div>
+        <div id="summary" class="summary muted">불러오는 중…</div>
+        <canvas id="chart" width="640" height="320" aria-label="월별 평균 출근 인원 그래프 (사업별)"></canvas>
+        <div class="legend"><span class="dot s"></span>시니어인턴십 <span class="dot f"></span>선택근무제 <span class="muted">· 월별 평균 출근 인원(명)</span></div>
+      </section>
+
+      <!-- 화면 ② 데이터 관리: 추가 · 수정(Enter) · 삭제 · CSV -->
+      <section aria-label="데이터 관리">
+        <div class="panel-head">
+          <h2>데이터 관리</h2>
+          <div>
+            <button id="seed-btn" class="btn ghost small" title="합성 데이터 364건 넣기">샘플 넣기</button>
+            <button id="export-btn" class="btn ghost small" title="CSV 다운로드">CSV</button>
+          </div>
+        </div>
+        <form id="data-form" class="data-form">
+          <input id="d-date" type="date" required aria-label="날짜">
+          <input id="d-value" type="number" min="0" step="1" placeholder="출근 인원" required aria-label="출근 인원">
+          <select id="d-program" aria-label="사업"><option value="senior">시니어</option><option value="flexwork">선택근무</option></select>
+          <input id="d-site" type="text" placeholder="사업장 (가명)" value="(가상)A사" maxlength="60" required aria-label="사업장">
+          <input id="d-memo" class="wide" type="text" placeholder="메모 (예: 연차 1명)" maxlength="300" aria-label="메모">
+          <button class="btn primary small" type="submit">추가</button>
+        </form>
+        <div class="table-head">
+          <select id="filter-program" aria-label="표 사업 필터">
+            <option value="">전체 사업</option><option value="senior">시니어</option><option value="flexwork">선택근무</option>
+          </select>
+          <span class="muted small-text">최근 30건 · 인원·메모 고치고 Enter = 수정</span>
+        </div>
+        <div id="data-status" class="small-text" role="status"></div>
+        <table class="data-table">
+          <thead><tr><th>날짜</th><th>사업</th><th>사업장</th><th>인원</th><th>메모</th><th></th></tr></thead>
+          <tbody id="data-rows"><tr><td colspan="6" class="muted">불러오는 중…</td></tr></tbody>
+        </table>
+      </section>
+    </aside>
+  </main>
+
+  <footer class="foot small-text muted">백엔드: <span id="api-url"></span> · 다른 백엔드로 테스트하려면 주소 뒤에 <code>?api=https://…</code> (되돌리기 <code>?api=reset</code>)</footer>
+
+  <dialog id="prompt-dialog">
+    <h3>시스템 프롬프트 (실제 GPT 입력)</h3>
+    <p id="prompt-meta" class="small-text muted"></p>
+    <pre id="prompt-text"></pre>
+    <form method="dialog"><button class="btn">닫기</button></form>
+  </dialog>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
