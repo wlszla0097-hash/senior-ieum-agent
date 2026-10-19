@@ -82,11 +82,11 @@ employees:      { employee_id, name(가명), site, program, hourly_wage 계약 �
 
 | 구분 | URL |
 |---|---|
-| 프론트 (Vercel) | https://________.vercel.app |
+| 프론트 (Vercel) | https://senior-ieum-agent-frontend.vercel.app |
 | 백엔드 API (Render) | https://senior-ieum-agent.onrender.com |
 | Swagger (Render) | https://senior-ieum-agent.onrender.com/docs |
 
-(프론트 Vercel 주소는 배포 후 채워 넣기 · Render 무료 서버는 15분 미사용 시 잠들어 첫 접속이 30초~1분 걸릴 수 있음)
+(Render 무료 서버는 15분 미사용 시 잠들어 첫 접속이 30초~1분 걸릴 수 있음)
 
 ## 4. 로컬 실행 (Firebase·OpenAI 키 없이도 됨)
 
