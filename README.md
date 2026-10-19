@@ -83,11 +83,10 @@ employees:      { employee_id, name(가명), site, program, hourly_wage 계약 �
 | 구분 | URL |
 |---|---|
 | 프론트 (Vercel) | https://________.vercel.app |
-| 백엔드 API (Render) | https://________.onrender.com |
-| Swagger (Render) | https://________.onrender.com/docs |
-| 백엔드 비교용 (Vercel) | https://________.vercel.app/docs |
+| 백엔드 API (Render) | https://senior-ieum-agent.onrender.com |
+| Swagger (Render) | https://senior-ieum-agent.onrender.com/docs |
 
-(배포 후 채워 넣기)
+(프론트 Vercel 주소는 배포 후 채워 넣기 · Render 무료 서버는 15분 미사용 시 잠들어 첫 접속이 30초~1분 걸릴 수 있음)
 
 ## 4. 로컬 실행 (Firebase·OpenAI 키 없이도 됨)
 
@@ -250,7 +249,10 @@ http://localhost:5500 을 연다 → 오른쪽 "샘플 넣기" → 요약·그�
 - [ ] 데이터 관리 화면: 추가, 수정(Enter), 삭제 동작
 - [ ] 대화 기록 화면: 목록에서 불러오기
 - [ ] "프롬프트 보기" 대화상자 (컨텍스트 주입 증거)
-- [ ] Swagger `/docs` (Render 주소)
+- [x] Swagger `/docs` (Render 주소)
+
+  ![Swagger — Render 배포](docs/screenshots/04-swagger-render.png)
+
 - [ ] (보너스) 그래프 + 다크 모드
 
 ## 11. 평가 때 항목별 한 문장
