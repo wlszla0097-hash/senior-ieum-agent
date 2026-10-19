@@ -23,10 +23,10 @@ def _firestore():
         import firebase_admin
         from firebase_admin import credentials, firestore
         if raw.startswith("{"):
-            info = json.loads(raw)
+            info = json.loads(raw, strict=False)  # 붙여넣을 때 키 안의 \n 이 실제 줄바꿈으로 바뀐 경우도 허용
         else:
             with open(raw, encoding="utf-8") as f:
-                info = json.load(f)
+                info = json.load(f, strict=False)
         if not firebase_admin._apps:
             firebase_admin.initialize_app(credentials.Certificate(info))
         _db = firestore.client()
